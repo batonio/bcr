@@ -152,29 +152,3 @@ EC_GROUP *EC_GROUP_new_curve_GFp(const BIGNUM *p, const BIGNUM *a,
 
     return ret;
 }
-
-#ifndef OPENSSL_NO_EC2M
-EC_GROUP *EC_GROUP_new_curve_GF2m(const BIGNUM *p, const BIGNUM *a,
-                                  const BIGNUM *b, BN_CTX *ctx)
-{
-    const EC_METHOD *meth;
-    EC_GROUP *ret;
-
-# ifdef OPENSSL_FIPS
-    if (FIPS_mode())
-        return FIPS_ec_group_new_curve_gf2m(p, a, b, ctx);
-# endif
-    meth = EC_GF2m_simple_method();
-
-    ret = EC_GROUP_new(meth);
-    if (ret == NULL)
-        return NULL;
-
-    if (!EC_GROUP_set_curve_GF2m(ret, p, a, b, ctx)) {
-        EC_GROUP_clear_free(ret);
-        return NULL;
-    }
-
-    return ret;
-}
-#endif

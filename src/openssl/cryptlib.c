@@ -403,16 +403,6 @@ int (*CRYPTO_get_add_lock_callback(void)) (int *num, int mount, int type,
     return (add_lock_callback);
 }
 
-void CRYPTO_set_locking_callback(void (*func) (int mode, int type,
-                                               const char *file, int line))
-{
-    /*
-     * Calling this here ensures initialisation before any threads are
-     * started.
-     */
-    OPENSSL_init();
-    locking_callback = func;
-}
 
 void CRYPTO_set_add_lock_callback(int (*func) (int *num, int mount, int type,
                                                const char *file, int line))

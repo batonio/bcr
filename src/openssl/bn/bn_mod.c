@@ -161,14 +161,6 @@ int BN_mod_add_quick(BIGNUM *r, const BIGNUM *a, const BIGNUM *b,
     return 1;
 }
 
-int BN_mod_sub(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, const BIGNUM *m,
-               BN_CTX *ctx)
-{
-    if (!BN_sub(r, a, b))
-        return 0;
-    return BN_nnmod(r, r, m, ctx);
-}
-
 /*
  * BN_mod_sub variant that may be used if both a and b are non-negative and
  * less than m
@@ -221,14 +213,6 @@ int BN_mod_sqr(BIGNUM *r, const BIGNUM *a, const BIGNUM *m, BN_CTX *ctx)
     return BN_mod(r, r, m, ctx);
 }
 
-int BN_mod_lshift1(BIGNUM *r, const BIGNUM *a, const BIGNUM *m, BN_CTX *ctx)
-{
-    if (!BN_lshift1(r, a))
-        return 0;
-    bn_check_top(r);
-    return BN_nnmod(r, r, m, ctx);
-}
-
 /*
  * BN_mod_lshift1 variant that may be used if a is non-negative and less than
  * m
@@ -241,30 +225,6 @@ int BN_mod_lshift1_quick(BIGNUM *r, const BIGNUM *a, const BIGNUM *m)
     if (BN_cmp(r, m) >= 0)
         return BN_sub(r, r, m);
     return 1;
-}
-
-int BN_mod_lshift(BIGNUM *r, const BIGNUM *a, int n, const BIGNUM *m,
-                  BN_CTX *ctx)
-{
-    BIGNUM *abs_m = NULL;
-    int ret;
-
-    if (!BN_nnmod(r, a, m, ctx))
-        return 0;
-
-    if (m->neg) {
-        abs_m = BN_dup(m);
-        if (abs_m == NULL)
-            return 0;
-        abs_m->neg = 0;
-    }
-
-    ret = BN_mod_lshift_quick(r, r, n, (abs_m ? abs_m : m));
-    bn_check_top(r);
-
-    if (abs_m)
-        BN_free(abs_m);
-    return ret;
 }
 
 /*

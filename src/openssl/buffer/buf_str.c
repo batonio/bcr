@@ -94,21 +94,6 @@ char *BUF_strndup(const char *str, size_t siz)
     return (ret);
 }
 
-void *BUF_memdup(const void *data, size_t siz)
-{
-    void *ret;
-
-    if (data == NULL)
-        return (NULL);
-
-    ret = OPENSSL_malloc(siz);
-    if (ret == NULL) {
-        BUFerr(BUF_F_BUF_MEMDUP, ERR_R_MALLOC_FAILURE);
-        return (NULL);
-    }
-    return memcpy(ret, data, siz);
-}
-
 size_t BUF_strlcpy(char *dst, const char *src, size_t size)
 {
     size_t l = 0;

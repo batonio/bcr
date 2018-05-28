@@ -72,56 +72,6 @@
 
 #include "ec_lcl.h"
 
-const EC_METHOD *EC_GFp_simple_method(void)
-{
-    static const EC_METHOD ret = {
-        EC_FLAGS_DEFAULT_OCT,
-        NID_X9_62_prime_field,
-        ec_GFp_simple_group_init,
-        ec_GFp_simple_group_finish,
-        ec_GFp_simple_group_clear_finish,
-        ec_GFp_simple_group_copy,
-        ec_GFp_simple_group_set_curve,
-        ec_GFp_simple_group_get_curve,
-        ec_GFp_simple_group_get_degree,
-        ec_GFp_simple_group_check_discriminant,
-        ec_GFp_simple_point_init,
-        ec_GFp_simple_point_finish,
-        ec_GFp_simple_point_clear_finish,
-        ec_GFp_simple_point_copy,
-        ec_GFp_simple_point_set_to_infinity,
-        ec_GFp_simple_set_Jprojective_coordinates_GFp,
-        ec_GFp_simple_get_Jprojective_coordinates_GFp,
-        ec_GFp_simple_point_set_affine_coordinates,
-        ec_GFp_simple_point_get_affine_coordinates,
-        0, 0, 0,
-        ec_GFp_simple_add,
-        ec_GFp_simple_dbl,
-        ec_GFp_simple_invert,
-        ec_GFp_simple_is_at_infinity,
-        ec_GFp_simple_is_on_curve,
-        ec_GFp_simple_cmp,
-        ec_GFp_simple_make_affine,
-        ec_GFp_simple_points_make_affine,
-        0 /* mul */ ,
-        0 /* precompute_mult */ ,
-        0 /* have_precompute_mult */ ,
-        ec_GFp_simple_field_mul,
-        ec_GFp_simple_field_sqr,
-        0 /* field_div */ ,
-        0 /* field_encode */ ,
-        0 /* field_decode */ ,
-        0                       /* field_set_to_one */
-    };
-
-#ifdef OPENSSL_FIPS
-    if (FIPS_mode())
-        return fips_ec_gfp_simple_method();
-#endif
-
-    return &ret;
-}
-
 /*
  * Most method functions in this file are designed to work with
  * non-trivial representations of field elements if necessary
@@ -1403,16 +1353,4 @@ int ec_GFp_simple_points_make_affine(const EC_GROUP *group, size_t num,
         OPENSSL_free(prod_Z);
     }
     return ret;
-}
-
-int ec_GFp_simple_field_mul(const EC_GROUP *group, BIGNUM *r, const BIGNUM *a,
-                            const BIGNUM *b, BN_CTX *ctx)
-{
-    return BN_mod_mul(r, a, b, &group->field, ctx);
-}
-
-int ec_GFp_simple_field_sqr(const EC_GROUP *group, BIGNUM *r, const BIGNUM *a,
-                            BN_CTX *ctx)
-{
-    return BN_mod_sqr(r, a, &group->field, ctx);
 }

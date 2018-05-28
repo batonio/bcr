@@ -434,8 +434,6 @@ int CRYPTO_get_new_lockid(char *name);
 
 int CRYPTO_num_locks(void);     /* return CRYPTO_NUM_LOCKS (shared libs!) */
 void CRYPTO_lock(int mode, int type, const char *file, int line);
-void CRYPTO_set_locking_callback(void (*func) (int mode, int type,
-                                               const char *file, int line));
 void (*CRYPTO_get_locking_callback(void)) (int mode, int type,
                                            const char *file, int line);
 void CRYPTO_set_add_lock_callback(int (*func)

@@ -164,21 +164,6 @@ int init_gost_hash_ctx(gost_hash_ctx * ctx,
 }
 
 /*
- * Free cipher CTX if it is dynamically allocated. Do not use
- * if cipher ctx is statically allocated as in OpenSSL implementation of
- * GOST hash algroritm
- *
- */
-void done_gost_hash_ctx(gost_hash_ctx * ctx)
-{
-    /*
-     * No need to use gost_destroy, because cipher keys are not really secret
-     * when hashing
-     */
-    MYFREE(ctx->cipher_ctx);
-}
-
-/*
  * reset state of hash context to begin hashing new message
  */
 int start_hash(gost_hash_ctx * ctx)

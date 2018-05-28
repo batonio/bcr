@@ -362,27 +362,3 @@ void *sk_set(_STACK *st, int i, void *value)
     return (st->data[i] = value);
 }
 
-void sk_sort(_STACK *st)
-{
-    if (st && !st->sorted) {
-        int (*comp_func) (const void *, const void *);
-
-        /*
-         * same comment as in sk_find ... previously st->comp was declared as
-         * a (void*,void*) callback type, but this made the population of the
-         * callback pointer illogical - our callbacks compare type** with
-         * type**, so we leave the casting until absolutely necessary (ie.
-         * "now").
-         */
-        comp_func = (int (*)(const void *, const void *))(st->comp);
-        qsort(st->data, st->num, sizeof(char *), comp_func);
-        st->sorted = 1;
-    }
-}
-
-int sk_is_sorted(const _STACK *st)
-{
-    if (!st)
-        return 1;
-    return st->sorted;
-}
