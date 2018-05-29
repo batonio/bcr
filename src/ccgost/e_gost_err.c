@@ -181,9 +181,4 @@ static int GOST_error_init = 1;
 
 void ERR_GOST_error(int function, int reason, char *file, int line)
 {
-/*
-    if (GOST_lib_error_code == 0)
-        GOST_lib_error_code = ERR_get_next_error_library();
-    ERR_PUT_error(GOST_lib_error_code, function, reason, file, line);
-*/
 }

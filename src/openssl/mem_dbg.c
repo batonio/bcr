@@ -292,37 +292,8 @@ int CRYPTO_is_mem_check_on(void)
     return (ret);
 }
 
-
-static int mem_cmp(const MEM *a, const MEM *b)
-{
-#ifdef _WIN64
-    const char *ap = (const char *)a->addr, *bp = (const char *)b->addr;
-    if (ap == bp)
-        return 0;
-    else if (ap > bp)
-        return 1;
-    else
-        return -1;
-#else
-    return (const char *)a->addr - (const char *)b->addr;
-#endif
-}
-
-static IMPLEMENT_LHASH_COMP_FN(mem, MEM)
-
-static unsigned long mem_hash(const MEM *a)
-{
-    unsigned long ret;
-
-    ret = (unsigned long)a->addr;
-
-    ret = ret * 17851 + (ret >> 14) * 7 + (ret >> 4) * 251;
-    return (ret);
-}
-
-static IMPLEMENT_LHASH_HASH_FN(mem, MEM)
-
 /* static int app_info_cmp(APP_INFO *a, APP_INFO *b) */
+
 static int app_info_cmp(const void *a_void, const void *b_void)
 {
     return CRYPTO_THREADID_cmp(&((const APP_INFO *)a_void)->threadid,

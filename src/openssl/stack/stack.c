@@ -116,39 +116,6 @@ _STACK *sk_dup(_STACK *sk)
     return (NULL);
 }
 
-_STACK *sk_deep_copy(_STACK *sk, void *(*copy_func) (void *),
-                     void (*free_func) (void *))
-{
-    _STACK *ret;
-    int i;
-
-    if ((ret = OPENSSL_malloc(sizeof(_STACK))) == NULL)
-        return ret;
-    ret->comp = sk->comp;
-    ret->sorted = sk->sorted;
-    ret->num = sk->num;
-    ret->num_alloc = sk->num > MIN_NODES ? sk->num : MIN_NODES;
-    ret->data = OPENSSL_malloc(sizeof(char *) * ret->num_alloc);
-    if (ret->data == NULL) {
-        OPENSSL_free(ret);
-        return NULL;
-    }
-    for (i = 0; i < ret->num_alloc; i++)
-        ret->data[i] = NULL;
-
-    for (i = 0; i < ret->num; ++i) {
-        if (sk->data[i] == NULL)
-            continue;
-        if ((ret->data[i] = copy_func(sk->data[i])) == NULL) {
-            while (--i >= 0)
-                if (ret->data[i] != NULL)
-                    free_func(ret->data[i]);
-            sk_free(ret);
-            return NULL;
-        }
-    }
-    return ret;
-}
 
 _STACK *sk_new_null(void)
 {
@@ -277,28 +244,9 @@ int sk_find(_STACK *st, void *data)
     return internal_find(st, data, OBJ_BSEARCH_FIRST_VALUE_ON_MATCH);
 }
 
-int sk_find_ex(_STACK *st, void *data)
-{
-    return internal_find(st, data, OBJ_BSEARCH_VALUE_ON_NOMATCH);
-}
-
 int sk_push(_STACK *st, void *data)
 {
     return (sk_insert(st, data, st->num));
-}
-
-int sk_unshift(_STACK *st, void *data)
-{
-    return (sk_insert(st, data, 0));
-}
-
-void *sk_shift(_STACK *st)
-{
-    if (st == NULL)
-        return (NULL);
-    if (st->num <= 0)
-        return (NULL);
-    return (sk_delete(st, 0));
 }
 
 void *sk_pop(_STACK *st)
@@ -308,16 +256,6 @@ void *sk_pop(_STACK *st)
     if (st->num <= 0)
         return (NULL);
     return (sk_delete(st, st->num - 1));
-}
-
-void sk_zero(_STACK *st)
-{
-    if (st == NULL)
-        return;
-    if (st->num <= 0)
-        return;
-    memset((char *)st->data, 0, sizeof(*st->data) * st->num);
-    st->num = 0;
 }
 
 void sk_pop_free(_STACK *st, void (*func) (void *))

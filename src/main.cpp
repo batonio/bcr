@@ -3,8 +3,6 @@
  *   Author: Erofeev Alexander(erofeev_an@mail.ru)
  *   Date: 09.05.18
  ***********************************************************************/
-#include <iostream>
-
 extern "C" {
 #include <gosthash.h>
 #include <gost_lcl.h>
@@ -61,13 +59,10 @@ static int pkey_gost01_cp_verify(EC_KEY* pub_key,
     const unsigned char *tbs, size_t tbs_len)
 {
     int ok = 0;
-//    std::cerr<<sig;
-    std::cerr<<"### Before unpack_cp_signature\n";
     DSA_SIG *s = unpack_cp_signature( sig, siglen );
     if (!s)
         return 0;
 
-    std::cerr<<"### gost2001_do_verify\n";
     if (pub_key)
         ok = gost2001_do_verify( tbs, tbs_len, s, pub_key );
     DSA_SIG_free(s);
@@ -82,27 +77,21 @@ int my_verify_gost(
     BIGNUM *X = NULL;
     BIGNUM *Y = NULL;
     EC_POINT *pub_key;
-    std::cerr<<"### Before getbnfrombuf for Y\n";
     Y = getbnfrombuf((const unsigned char*)in_pub1,32);
-    std::cerr<<"### Before getbnfrombuf for X\n";
     X = getbnfrombuf((const unsigned char*)in_pub2,32);
-    std::cerr<<"### Before EC_KEY_new\n";
     //Проверка ЭЦП
     if (!(eckey = EC_KEY_new())) {
         errcode = 1;
         goto err_exit;
     }
-    std::cerr<<"### Before fill_GOST2001_params\n";
     if (!fill_GOST2001_params(eckey, nid)) {
         errcode = 2;
         goto err_exit;
     }
-    std::cerr<<"### Before EC_POINT_new\n";
     if (!(pub_key = EC_POINT_new(EC_KEY_get0_group(eckey)))) {
         errcode = 3;
         goto err_exit;
     }
-    std::cerr<<"### Before  EC_POINT_set_affine_coordinates_GFp\n";
     if (!EC_POINT_set_affine_coordinates_GFp(
             EC_KEY_get0_group(eckey),
             pub_key,
@@ -113,12 +102,10 @@ int my_verify_gost(
         errcode = 4;
         goto err_exit;
     }
-    std::cerr<<"### Before EC_KEY_set_public_key\n";
     if (!EC_KEY_set_public_key(eckey,pub_key)) {
         errcode = 5;
         goto err_exit;
     }
-    std::cerr<<"### Before pkey_gost01_cp_verify\n";
     if (!pkey_gost01_cp_verify(eckey, in_sign, 64, in_hash, 32)) {
         errcode = 6;
         goto err_exit;
@@ -144,9 +131,7 @@ void my_hash_gost(const byte *buf, int buflen, char *hash_res)
 }
 
 int main() {
-    std::cerr<<"### Before hashing\n";
     my_hash_gost( data_txt, sizeof(data_txt), hash_gost );
-    std::cerr<<"### Before verifying\n";
     int err = my_verify_gost(
         (const unsigned char*)hash_gost,
         data_txt_sig,
@@ -154,6 +139,6 @@ int main() {
         (char*)pub_key_rev + 32,
         NID_id_GostR3410_2001_CryptoPro_A_ParamSet);
 
-    std::cout<<err<<std::endl;
+    printf("%d\n", err);
     return err;
 }

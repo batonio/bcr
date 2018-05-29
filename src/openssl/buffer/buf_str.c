@@ -105,11 +105,3 @@ size_t BUF_strlcpy(char *dst, const char *src, size_t size)
         *dst = '\0';
     return l + strlen(src);
 }
-
-size_t BUF_strlcat(char *dst, const char *src, size_t size)
-{
-    size_t l = 0;
-    for (; size > 0 && *dst; size--, dst++)
-        l++;
-    return l + BUF_strlcpy(dst, src, size);
-}

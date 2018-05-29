@@ -208,15 +208,6 @@ int CRYPTO_get_new_lockid(char *name)
     char *str;
     int i;
 
-#if defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_WIN16)
-    /*
-     * A hack to make Visual C++ 5.0 work correctly when linking as a DLL
-     * using /MT. Without this, the application cannot use any floating point
-     * printf's. It also seems to be needed for Visual C 1.5 (win16)
-     */
-    SSLeay_MSVC5_hack = (double)name[0] * (double)name[1];
-#endif
-
     if ((app_locks == NULL)
         && ((app_locks = sk_OPENSSL_STRING_new_null()) == NULL)) {
         CRYPTOerr(CRYPTO_F_CRYPTO_GET_NEW_LOCKID, ERR_R_MALLOC_FAILURE);
@@ -957,53 +948,6 @@ void OPENSSL_showfatal(const char *fmta, ...)
         MessageBox(NULL, buf, _T("OpenSSL: FATAL"), MB_OK | MB_ICONSTOP);
 }
 #else
-void OPENSSL_showfatal(const char *fmta, ...)
-{
-    va_list ap;
-
-    va_start(ap, fmta);
-    vfprintf(stderr, fmta, ap);
-    va_end(ap);
-}
-
-int OPENSSL_isservice(void)
-{
-    return 0;
-}
 #endif
 
-void OpenSSLDie(const char *file, int line, const char *assertion)
-{
-    OPENSSL_showfatal
-        ("%s(%d): OpenSSL internal error, assertion failed: %s\n", file, line,
-         assertion);
-#if !defined(_WIN32) || defined(__CYGWIN__)
-    abort();
-#else
-    /*
-     * Win32 abort() customarily shows a dialog, but we just did that...
-     */
-# if !defined(_WIN32_WCE)
-    raise(SIGABRT);
-# endif
-    _exit(3);
-#endif
-}
-
-void *OPENSSL_stderr(void)
-{
-    return stderr;
-}
-
-int CRYPTO_memcmp(const void *in_a, const void *in_b, size_t len)
-{
-    size_t i;
-    const unsigned char *a = in_a;
-    const unsigned char *b = in_b;
-    unsigned char x = 0;
-
-    for (i = 0; i < len; i++)
-        x |= a[i] ^ b[i];
-
-    return x;
-}
+void OpenSSLDie(const char *file, int line, const char *assertion) {}
