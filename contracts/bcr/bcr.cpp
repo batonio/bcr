@@ -42,31 +42,27 @@ unsigned char data_txt_sig[] = {
     0x6a, 0x0b, 0xa5, 0x89
 };
 
-#include <chrono>
-#include <stdio.h>
-#include <stdint.h>
 
 extern "C" {
     #include "verify_gost_sign.h"
 }
 
-using namespace std::chrono;
+#include <eosiolib/eosio.hpp>
+using namespace eosio;
 
-uint64_t msec() {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()).count();
-}
+class bcr : public eosio::contract {
+public:
+    using contract::contract;
 
-void ms() {
-    printf("msec: %ld\n", msec() );
-}
+    /// @abi action
+    void verify( account_name user ) {
+        int ret = ::verify_gost_sign(
+            data_txt, sizeof(data_txt),
+            data_txt_sig,
+            pub_key);
+        print( "Message: ", name{user} );
+        print( "Verify GOST sign result: ", ret );
+    }
+};
 
-int main() {
-    ms();
-    int ret = ::verify_gost_sign(
-        data_txt, sizeof(data_txt),
-        data_txt_sig,
-        pub_key);
-    ms();
-    printf( "Verify GOST sign result: %i\n", ret );
-}
+EOSIO_ABI( bcr, (verify) )

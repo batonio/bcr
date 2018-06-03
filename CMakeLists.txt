@@ -3,12 +3,11 @@ project(${PROJECT_NAME})
 cmake_minimum_required(VERSION 3.8.2)
 
 file(GLOB SOURCE_FILES
+        "src/*.h"
+        "src/*.c"
         "src/*.cpp"
-        "src/ccgost/*.h"
         "src/ccgost/*.c"
-        "src/openssl/*.h"
         "src/openssl/*.c"
-        "src/openssl/*.s"
         "src/openssl/bn/*.c"
         "src/openssl/buffer/*.c"
         "src/openssl/dsa/*.c"
@@ -32,11 +31,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_NO_ERR")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_NO_LHASH")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_NO_ENGINE")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_NO_EC_NISTP_64_GCC_128")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_CPUID_OBJ")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_SMALL_FOOTPRINT")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBN_DEBUG")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBN_SQR_COMBA")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
 
 add_executable(bcr ${SOURCE_FILES})
