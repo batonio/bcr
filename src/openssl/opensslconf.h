@@ -8,11 +8,17 @@ extern "C" {
 #ifndef OPENSSL_DOING_MAKEDEPEND
 
 
+#ifndef OPENSSL_NO_COMP
+# define OPENSSL_NO_COMP
+#endif
 #ifndef OPENSSL_NO_EC_NISTP_64_GCC_128
 # define OPENSSL_NO_EC_NISTP_64_GCC_128
 #endif
 #ifndef OPENSSL_NO_GMP
 # define OPENSSL_NO_GMP
+#endif
+#ifndef OPENSSL_NO_IDEA
+# define OPENSSL_NO_IDEA
 #endif
 #ifndef OPENSSL_NO_JPAKE
 # define OPENSSL_NO_JPAKE
@@ -26,6 +32,12 @@ extern "C" {
 #ifndef OPENSSL_NO_MD2
 # define OPENSSL_NO_MD2
 #endif
+#ifndef OPENSSL_NO_NPN
+# define OPENSSL_NO_NPN
+#endif
+#ifndef OPENSSL_NO_PSK
+# define OPENSSL_NO_PSK
+#endif
 #ifndef OPENSSL_NO_RC5
 # define OPENSSL_NO_RC5
 #endif
@@ -35,8 +47,17 @@ extern "C" {
 #ifndef OPENSSL_NO_SCTP
 # define OPENSSL_NO_SCTP
 #endif
+#ifndef OPENSSL_NO_SRP
+# define OPENSSL_NO_SRP
+#endif
 #ifndef OPENSSL_NO_SSL_TRACE
 # define OPENSSL_NO_SSL_TRACE
+#endif
+#ifndef OPENSSL_NO_SSL2
+# define OPENSSL_NO_SSL2
+#endif
+#ifndef OPENSSL_NO_SSL3
+# define OPENSSL_NO_SSL3
 #endif
 #ifndef OPENSSL_NO_STORE
 # define OPENSSL_NO_STORE
@@ -47,8 +68,14 @@ extern "C" {
 
 #endif /* OPENSSL_DOING_MAKEDEPEND */
 
-#ifndef OPENSSL_THREADS
-# define OPENSSL_THREADS
+#ifndef OPENSSL_NO_ASM
+# define OPENSSL_NO_ASM
+#endif
+#ifndef OPENSSL_NO_ERR
+# define OPENSSL_NO_ERR
+#endif
+#ifndef OPENSSL_NO_HW
+# define OPENSSL_NO_HW
 #endif
 #ifndef OPENSSL_NO_STATIC_ENGINE
 # define OPENSSL_NO_STATIC_ENGINE
@@ -59,11 +86,17 @@ extern "C" {
    who haven't had the time to do the appropriate changes in their
    applications.  */
 #ifdef OPENSSL_ALGORITHM_DEFINES
+# if defined(OPENSSL_NO_COMP) && !defined(NO_COMP)
+#  define NO_COMP
+# endif
 # if defined(OPENSSL_NO_EC_NISTP_64_GCC_128) && !defined(NO_EC_NISTP_64_GCC_128)
 #  define NO_EC_NISTP_64_GCC_128
 # endif
 # if defined(OPENSSL_NO_GMP) && !defined(NO_GMP)
 #  define NO_GMP
+# endif
+# if defined(OPENSSL_NO_IDEA) && !defined(NO_IDEA)
+#  define NO_IDEA
 # endif
 # if defined(OPENSSL_NO_JPAKE) && !defined(NO_JPAKE)
 #  define NO_JPAKE
@@ -77,6 +110,12 @@ extern "C" {
 # if defined(OPENSSL_NO_MD2) && !defined(NO_MD2)
 #  define NO_MD2
 # endif
+# if defined(OPENSSL_NO_NPN) && !defined(NO_NPN)
+#  define NO_NPN
+# endif
+# if defined(OPENSSL_NO_PSK) && !defined(NO_PSK)
+#  define NO_PSK
+# endif
 # if defined(OPENSSL_NO_RC5) && !defined(NO_RC5)
 #  define NO_RC5
 # endif
@@ -86,8 +125,17 @@ extern "C" {
 # if defined(OPENSSL_NO_SCTP) && !defined(NO_SCTP)
 #  define NO_SCTP
 # endif
+# if defined(OPENSSL_NO_SRP) && !defined(NO_SRP)
+#  define NO_SRP
+# endif
 # if defined(OPENSSL_NO_SSL_TRACE) && !defined(NO_SSL_TRACE)
 #  define NO_SSL_TRACE
+# endif
+# if defined(OPENSSL_NO_SSL2) && !defined(NO_SSL2)
+#  define NO_SSL2
+# endif
+# if defined(OPENSSL_NO_SSL3) && !defined(NO_SSL3)
+#  define NO_SSL3
 # endif
 # if defined(OPENSSL_NO_STORE) && !defined(NO_STORE)
 #  define NO_STORE
@@ -96,8 +144,6 @@ extern "C" {
 #  define NO_UNIT_TEST
 # endif
 #endif
-
-#define OPENSSL_CPUID_OBJ
 
 /* crypto/opensslconf.h.in */
 
@@ -138,7 +184,7 @@ extern "C" {
  * - Intel P6 because partial register stalls are very expensive;
  * - elder Alpha because it lacks byte load/store instructions;
  */
-#define RC4_INT unsigned int
+#define RC4_INT unsigned char
 #endif
 #if !defined(RC4_CHUNK)
 /*
@@ -159,14 +205,14 @@ extern "C" {
 
 #if defined(HEADER_BN_H) && !defined(CONFIG_HEADER_BN_H)
 #define CONFIG_HEADER_BN_H
-#undef BN_LLONG
+#define BN_LLONG
 
 /* Should we define BN_DIV2W here? */
 
 /* Only one for the following should be defined */
-#define SIXTY_FOUR_BIT_LONG
+#undef SIXTY_FOUR_BIT_LONG
 #undef SIXTY_FOUR_BIT
-#undef THIRTY_TWO_BIT
+#define THIRTY_TWO_BIT
 #endif
 
 #if defined(HEADER_RC4_LOCL_H) && !defined(CONFIG_HEADER_RC4_LOCL_H)
@@ -178,7 +224,7 @@ extern "C" {
 
 #if defined(HEADER_BF_LOCL_H) && !defined(CONFIG_HEADER_BF_LOCL_H)
 #define CONFIG_HEADER_BF_LOCL_H
-#undef BF_PTR
+#define BF_PTR
 #endif /* HEADER_BF_LOCL_H */
 
 #if defined(HEADER_DES_LOCL_H) && !defined(CONFIG_HEADER_DES_LOCL_H)
