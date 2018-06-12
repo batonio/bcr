@@ -58,7 +58,7 @@ uint64_t msec() {
 }
 
 void ms() {
-    printf("msec: %ld\n", msec() );
+    printf("msec: %u\n", (unsigned)msec() );
 }
 
 int main() {

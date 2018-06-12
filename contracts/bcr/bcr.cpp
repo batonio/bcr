@@ -60,7 +60,6 @@ public:
             data_txt, sizeof(data_txt),
             data_txt_sig,
             pub_key);
-        print( "Message: ", name{user} );
         print( "Verify GOST sign result: ", ret );
     }
 };
