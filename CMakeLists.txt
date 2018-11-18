@@ -2,6 +2,9 @@ set(PROJECT_NAME bcr)
 project(${PROJECT_NAME})
 cmake_minimum_required(VERSION 3.8.2)
 
+#Для eosio.cdt
+#find_package(eosio.cdt)
+
 file(GLOB SOURCE_FILES
         "src/*.h"
         "src/*.c"
@@ -37,8 +40,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DOPENSSL_NO_ERR -DOPENSSL_NO_COMP -DOPENSSL
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -m32")
 
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs -ftest-coverage")
-
 add_executable(bcr ${SOURCE_FILES})
-#target_link_libraries(bcr gcov)
 
+#Для eosio.cdt
+#add_library( gost_verify_sign "${SOURCES}" )
